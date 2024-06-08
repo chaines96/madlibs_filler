@@ -12,7 +12,7 @@ fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
     let wordlist_path = String::from("wordlist.txt");
     let madlib_path = String::from("input.txt");
-    let mut wordlist_path_ptr = &wordlist_path;
+    let mut wordlist_path_ptr = &wordlist_path; //A pointer to the wordlist is used so that it can be changed from within the conditional block. That way it only writes if arguments are passed.
     let mut madlib_path_ptr = &madlib_path;
     if args.len() > 1 {
         wordlist_path_ptr = &args[1];
