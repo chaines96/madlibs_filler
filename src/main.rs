@@ -9,40 +9,27 @@ use std::io::Write;
 use rand::prelude::*;
 
 fn main() -> std::io::Result<()> {
-    //let args: Vec<String> = env::args().collect();
-    //dbg!(args);
     let args: Vec<String> = env::args().collect();
-    let wordlist_path = &args[1];
-    let madlib_path = &args[2];
+    let wordlist_path = String::from("wordlist.txt");
+    let madlib_path = String::from("input.txt");
+    let mut wordlist_path_ptr = &wordlist_path;
+    let mut madlib_path_ptr = &madlib_path;
+    if args.len() > 1 {
+        wordlist_path_ptr = &args[1];
+        madlib_path_ptr = &args[2];
+    }
     println!("In query {}", wordlist_path);
     println!("In file {}", madlib_path);
     
     //Reading the file.
-    let madlib_unsolved = fs::read_to_string(madlib_path)
-        .expect("Should have been able to read the file");
+    let madlib_unsolved = fs::read_to_string(madlib_path_ptr)
+        .expect("Error: No madlibs input file present!");
     println!("With text:\n{madlib_unsolved}");
-    //let mut madlib_solved = "";
-    //for graphene in my_str.bytes()
-     //   {
-      //      let mut j;
-       //     if i == '<'
-        //    {
-         //       madlib_solved.insert("ligma");
-          //  }
-           // else 
-            //{
-             //   &madlib_solved[j] = madlib_unsolved[i];
-              //  j = j + 1;
-            //}
-        //} 
                 //Reads the list of words
-    let wordlist = fs::read_to_string(wordlist_path)
-            .expect("Should have been able to read the file");
+    let wordlist = fs::read_to_string(wordlist_path_ptr)
+            .expect("Error: Wordlist file missing!");
     let mut verbs: Vec<_> = wordlist.lines().collect();
     //Randomizes order of words
-    //let y: f64 = rng.gen(); // generates a float between 0 and 1
-    //let length = len(verbs);
-    //let mut nums: Vec<i32> = (1..100).collect();
     let mut rng = thread_rng();
     verbs.shuffle(&mut rng);
     //
