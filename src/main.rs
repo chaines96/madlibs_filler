@@ -45,9 +45,9 @@ fn main() -> std::io::Result<()> {
 //              delimiter: String which acts as a seperator for both strings.
 //Outputs: A string which contains a modified version of madlib_unsolved_point with the specified positoins replaced with random words from the wordlist.
 fn transform(wordlist_point: &str, madlib_unsolved_point: &str, delimiter: &str) -> String {
-        let mut wordlist = String::from(wordlist_point);
-        let mut madlib_unsolved = String::from(madlib_unsolved_point);
-        let mut word_collector:  Vec<&str> = wordlist.split(delimiter).collect();
+        let wordlist = String::from(wordlist_point);
+        let madlib_unsolved = String::from(madlib_unsolved_point);
+        let word_collector:  Vec<&str> = wordlist.split(delimiter).collect();
         let mut verbs: Vec<_> = word_collector[1].lines().collect();
             //Randomizes order of words
         let mut rng = thread_rng();
