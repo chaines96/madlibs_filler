@@ -1,0 +1,1 @@
+This contains sample input. Feel free to add placeholders for your words in the following manner: <v> for present tense verbs, <prv> for present progressive verbs, <pv> for past tense verbs, <n> for nouns, <a> for adjectives, or <ad> for adverbs.
