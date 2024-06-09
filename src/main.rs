@@ -61,6 +61,7 @@ fn transform(wordlist_point: &str, madlib_unsolved_point: &str, delimiter: &str)
         for verb_split in verb_splits {
             //This conditional prevents an extra line being placed first
             let mut superword = verbs[i];
+            //This loop will check to make sure the word being inserted is not empty. 
             while superword == "" {
                 i = (i + 1) % verblist_length;
                 superword = verbs[i];
@@ -71,7 +72,6 @@ fn transform(wordlist_point: &str, madlib_unsolved_point: &str, delimiter: &str)
             newthing.push_str(verb_split); 
             j = j + 1;
             i = j % verblist_length;
-            println!("Writing {superword} and replacing {delimiter} at position {j} of {verblist_length} \n");
         }
         
     return newthing.to_string();
