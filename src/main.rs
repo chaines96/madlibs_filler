@@ -21,7 +21,7 @@ fn main() -> std::io::Result<()> {
     //Reading the file.
     let mut madlib_unsolved = fs::read_to_string(madlib_path_ptr)
         .expect("Error: No madlibs input file present!");
-    println!("With text:\n{madlib_unsolved}");
+
                 //Reads the list of words
     let wordlist = fs::read_to_string(wordlist_path_ptr)
             .expect("Error: Wordlist file missing!");
@@ -60,12 +60,18 @@ fn transform(wordlist_point: &str, madlib_unsolved_point: &str, delimiter: &str)
         let verblist_length: usize = verbs.len().try_into().unwrap();
         for verb_split in verb_splits {
             //This conditional prevents an extra line being placed first
+            let mut superword = verbs[i];
+            while superword == "" {
+                i = (i + 1) % verblist_length;
+                superword = verbs[i];
+            }
             if j > 0 {
-                newthing.push_str(verbs[i]);
+                newthing.push_str(superword);
                 }
             newthing.push_str(verb_split); 
             j = j + 1;
-            i = (j - 1) % verblist_length;
+            i = j % verblist_length;
+            println!("Writing {superword} and replacing {delimiter} at position {j} of {verblist_length} \n");
         }
         
     return newthing.to_string();
