@@ -12,15 +12,14 @@ fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
     let wordlist_path = String::from("wordlist.txt");
     let madlib_path = String::from("input.txt");
-    let mut wordlist_path_ptr = &wordlist_path; //A pointer to the wordlist is used so that it can be changed from within the conditional block. That way it only writes if arguments are passed.
+    let wordlist_path_ptr = &wordlist_path; //A pointer to the wordlist is used so that it can be changed from within the conditional block. That way it only writes if arguments are passed.
     let mut madlib_path_ptr = &madlib_path;
     if args.len() > 1 {
-        wordlist_path_ptr = &args[1];
-        madlib_path_ptr = &args[2];
+        madlib_path_ptr = &args[0];
     }
     
     //Reading the file.
-    let madlib_unsolved = fs::read_to_string(madlib_path_ptr)
+    let mut madlib_unsolved = fs::read_to_string(madlib_path_ptr)
         .expect("Error: No madlibs input file present!");
     println!("With text:\n{madlib_unsolved}");
                 //Reads the list of words
@@ -29,24 +28,32 @@ fn main() -> std::io::Result<()> {
 
 
     // Creates a mutable madlib string
-    let mut madlib_solved = String::new();
-    madlib_solved.push_str(&transform(wordlist, madlib_unsolved, "<v>"));
+    //let mut madlib_solved = String::new();
+    madlib_unsolved = transform(&wordlist, &madlib_unsolved, "<n>"); //Replaces nouns
+    madlib_unsolved = transform(&wordlist, &madlib_unsolved, "<v>"); //Replaces present tense verbs
+    madlib_unsolved = transform(&wordlist, &madlib_unsolved, "<pv>"); //Replaces past tense verbs
+    madlib_unsolved = transform(&wordlist, &madlib_unsolved, "<prv>"); //Replaces present progressive tense verbs (i.e. verbs that end in 'ing")
+    madlib_unsolved = transform(&wordlist, &madlib_unsolved, "<a>"); //Replaces adjectives
+    madlib_unsolved =  transform(&wordlist, &madlib_unsolved, "<ad>"); //Replaces adverbs
     let mut f = fs::File::create("output.txt")?;
-    f.write_all(madlib_solved.as_bytes())?;
-    
-    //writeln!(&mut f, madlib_unsolved);
+    f.write_all(madlib_unsolved.as_bytes())?;
     Ok(())
 }
 
-fn transform(wordlist: String, madlib_unsolved: String, delimiter: &str) -> String {
-        let mut yvqf:  Vec<&str> = wordlist.split(delimiter).collect();
-        let mut verbs: Vec<_> = yvqf[1].lines().collect();
+//Inputs: wordlist_point: String of words to be inserted with seperators between each category.
+//             madlib_unsolved_point: String of text whose words are to be replaced using the specified seperator.
+//              delimiter: String which acts as a seperator for both strings.
+//Outputs: A string which contains a modified version of madlib_unsolved_point with the specified positoins replaced with random words from the wordlist.
+fn transform(wordlist_point: &str, madlib_unsolved_point: &str, delimiter: &str) -> String {
+        let mut wordlist = String::from(wordlist_point);
+        let mut madlib_unsolved = String::from(madlib_unsolved_point);
+        let mut word_collector:  Vec<&str> = wordlist.split(delimiter).collect();
+        let mut verbs: Vec<_> = word_collector[1].lines().collect();
             //Randomizes order of words
         let mut rng = thread_rng();
         verbs.shuffle(&mut rng);
     
         let mut newthing = String::new();
-        // This 
         let verb_splits = madlib_unsolved.split(delimiter);
         let mut i: usize = 0;
         let mut j: usize = 0;
@@ -56,7 +63,7 @@ fn transform(wordlist: String, madlib_unsolved: String, delimiter: &str) -> Stri
             if j > 0 {
                 newthing.push_str(verbs[i]);
                 }
-            newthing.push_str(verb_split); //Previously used .replacen(<v>,"fart",1);
+            newthing.push_str(verb_split); 
             j = j + 1;
             i = (j - 1) % verblist_length;
         }
